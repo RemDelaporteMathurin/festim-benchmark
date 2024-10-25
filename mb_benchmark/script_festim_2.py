@@ -88,36 +88,36 @@ def run_festim_2(volume_file, facet_file):
         surface2: vol2,
     }
 
-    my_model.settings = F.Settings(atol=None, rtol=1e-5, final_time=10)
+    my_model.settings = F.Settings(atol=1e-6, rtol=1e-6, final_time=10)
     my_model.settings.stepsize = F.Stepsize(1)
 
-    mobile_exports = [
-        F.VTXExport(
-            f"results_festim_2/mobile_{subdomain.id}.bp",
-            field=mobile,
-            subdomain=subdomain,
-        )
-        for subdomain in my_model.volume_subdomains
-    ]
-    trapped_exports = [
-        F.VTXExport(
-            f"results_festim_2/trapped_{vol1.id}a.bp",
-            field=trapped_1a,
-            subdomain=vol1,
-        ),
-        F.VTXExport(
-            f"results_festim_2/trapped_{vol1.id}b.bp",
-            field=trapped_1b,
-            subdomain=vol1,
-        ),
-        F.VTXExport(
-            f"results_festim_2/trapped_{vol2.id}.bp",
-            field=trapped_2,
-            subdomain=vol2,
-        ),
-    ]
+    # mobile_exports = [
+    #     F.VTXExport(
+    #         f"results_festim_2/mobile_{subdomain.id}.bp",
+    #         field=mobile,
+    #         subdomain=subdomain,
+    #     )
+    #     for subdomain in my_model.volume_subdomains
+    # ]
+    # trapped_exports = [
+    #     F.VTXExport(
+    #         f"results_festim_2/trapped_{vol1.id}a.bp",
+    #         field=trapped_1a,
+    #         subdomain=vol1,
+    #     ),
+    #     F.VTXExport(
+    #         f"results_festim_2/trapped_{vol1.id}b.bp",
+    #         field=trapped_1b,
+    #         subdomain=vol1,
+    #     ),
+    #     F.VTXExport(
+    #         f"results_festim_2/trapped_{vol2.id}.bp",
+    #         field=trapped_2,
+    #         subdomain=vol2,
+    #     ),
+    # ]
 
-    my_model.exports = mobile_exports + trapped_exports
+    # my_model.exports = mobile_exports + trapped_exports
     my_model.initialise()
     my_model.run()
 
