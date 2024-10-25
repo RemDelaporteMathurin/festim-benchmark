@@ -10,7 +10,7 @@ import dolfinx
 
 # dolfinx.log.set_log_level(dolfinx.log.LogLevel.INFO)
 
-from create_mesh import three_cubes, convert_mesh
+from mesh import three_cubes, convert_mesh
 
 three_cubes("mesh/mesh.msh")
 convert_mesh("mesh/mesh.msh")
