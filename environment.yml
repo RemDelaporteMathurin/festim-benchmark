@@ -9,5 +9,7 @@ dependencies:
   - python-gmsh
   - meshio
   - scifem
+  - ipykernel
+  - ipyparallel
   - pip:
       - git+https://github.com/remdelaportemathurin/festim@discontinuity-generic
