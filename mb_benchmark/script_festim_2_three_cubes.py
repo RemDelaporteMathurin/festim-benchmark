@@ -1,5 +1,5 @@
 import festim as F
-import numpy as np
+
 
 assert hasattr(
     F, "HydrogenTransportProblem"
@@ -42,13 +42,13 @@ vol3 = F.VolumeSubdomain(id=3, material=copper)
 surface1 = F.SurfaceSubdomain(id=4)
 
 interface1 = F.Interface(
-    id=5, parent_mesh=my_model.mesh.mesh, mt=mt, subdomains=[vol1, vol2]
+    id=6, subdomains=[vol1, vol2]
 )
 interface1 = F.Interface(
-    id=6, parent_mesh=my_model.mesh.mesh, mt=mt, subdomains=[vol2, vol3]
+    id=7, subdomains=[vol2, vol3]
 )
 
-surface2 = F.SurfaceSubdomain(id=7)
+surface2 = F.SurfaceSubdomain(id=5)
 
 
 my_model.subdomains = [vol1, vol2, vol3, surface1, surface2]
@@ -106,27 +106,27 @@ my_model.surface_to_volume = {
     surface2: vol2,
 }
 
-my_model.settings = F.Settings(atol=None, rtol=None, final_time=10)
+my_model.settings = F.Settings(atol=1e-6, rtol=1e-6, final_time=10)
 my_model.settings.stepsize = F.Stepsize(1)
 
 my_model.exports = [
-    F.VTXExport(
+    F.VTXSpeciesExport(
         f"results_festim_2/mobile_{subdomain.id}.bp", field=mobile, subdomain=subdomain
     )
     for subdomain in my_model.volume_subdomains
 ]
 # [
-#     F.VTXExport(
+#     F.VTXSpeciesExport(
 #         f"results_festim_2/trapped_{vol1.id}a.bp",
 #         field=trapped_1a,
 #         subdomain=vol1,
 #     ),
-#     F.VTXExport(
+#     F.VTXSpeciesExport(
 #         f"results_festim_2/trapped_{vol1.id}b.bp",
 #         field=trapped_1b,
 #         subdomain=vol1,
 #     ),
-#     F.VTXExport(
+#     F.VTXSpeciesExport(
 #         f"results_festim_2/trapped_{vol2.id}.bp",
 #         field=trapped_2,
 #         subdomain=vol2,

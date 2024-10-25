@@ -1,12 +1,12 @@
 import gmsh
-
+from pathlib import Path
 import os
 
 
 def save_mesh(filename):
     # Extract the directory from the filename
-    directory = os.path.dirname(filename)
 
+    directory = os.path.dirname(filename)
     # If directory doesn't exist, create it
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -108,6 +108,7 @@ def three_cubes(filename, size=0.1):
     gmsh.model.mesh.generate(3)
 
     # Save the mesh
+    Path(filename).parent.mkdir(parents=True, exist_ok=True)
     gmsh.write(filename)
 
     try:
@@ -189,7 +190,6 @@ def two_cubes(filename, size=0.1):
 
     # Generate the mesh
     gmsh.model.mesh.generate(3)
-
     # Save the mesh
     save_mesh(filename)
 
