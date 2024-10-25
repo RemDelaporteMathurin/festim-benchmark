@@ -2,11 +2,12 @@ name: festim-benchmark-env
 channels:
   - conda-forge
 dependencies:
-  - python=3.12
+  - python=3.10
   - fenics-dolfinx=0.9.0
   - matplotlib
   - pandas
   - python-gmsh
   - meshio
+  - scifem
   - pip:
       - git+https://github.com/remdelaportemathurin/festim@discontinuity-generic
