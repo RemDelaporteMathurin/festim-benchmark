@@ -96,11 +96,11 @@ def three_cubes(filename, size=0.1):
     gmsh.write(filename)
     print(f"Mesh saved to '{filename}'")
 
-    try:
-        # If you want to visualize the mesh
-        gmsh.fltk.run()
-    except:
-        pass
+    # try:
+    #     # If you want to visualize the mesh
+    #     gmsh.fltk.run()
+    # except:
+    #     pass
 
     gmsh.finalize()
 
