@@ -6,7 +6,6 @@ def convert_mesh(filename, volume_file="mesh/mesh.xdmf", boundary_file="mesh/mf.
 
     # Convert mesh to XDMF
     msh = meshio.read(filename)
-    assert False
 
     # Initialize lists to store cells and their corresponding data
     triangle_cells_list = []
@@ -53,6 +52,7 @@ def convert_mesh(filename, volume_file="mesh/mesh.xdmf", boundary_file="mesh/mf.
     # Print unique surface and volume IDs
     print("Surface IDs: ", np.unique(triangle_data))
     print("Volume IDs: ", np.unique(tetra_data))
+    assert False
 
     # Write the mesh files
     meshio.write(volume_file, tetra_mesh)
