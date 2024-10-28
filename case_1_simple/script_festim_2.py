@@ -9,7 +9,15 @@ def run_festim_2(volume_file: str, facet_file: str):
         F, "HydrogenTransportProblem"
     ), "you should use FESTIM on the fenicsx branch"
 
-    my_model = F.HTransportProblemDiscontinuous()
+    my_model = F.HTransportProblemDiscontinuous(
+        petsc_options={
+            "ksp_type": "preonly",
+            "pc_type": "lu",
+            "pc_factor_mat_solver_type": "mumps",
+            "ksp_monitor": None,
+            "ksp_error_if_not_converged": True,
+        }
+    )
     my_model.mesh = F.MeshFromXDMF(
         volume_file=volume_file,
         facet_file=facet_file,
