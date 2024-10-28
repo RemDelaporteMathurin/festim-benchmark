@@ -8,8 +8,8 @@ dependencies:
   - pandas
   - python-gmsh
   - meshio
-  - scifem
+  - scifem=0.2.8
   - ipykernel
   - ipyparallel
   - pip:
-      - git+https://github.com/remdelaportemathurin/festim@discontinuity-generic
+      - git+https://github.com/remdelaportemathurin/festim@25a97903fcdf7d45f4fac384ca86002653e37cac
