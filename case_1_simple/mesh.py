@@ -2,6 +2,12 @@ import gmsh
 from pathlib import Path
 import os
 
+def empty_mesh(filename):
+    gmsh.initialize()
+    gmsh.model.add("simple")
+    Path(filename).parent.mkdir(parents=True, exist_ok=True)
+    gmsh.write(filename)
+    gmsh.finalize()
 
 def three_cubes(filename, size=0.1):
     gmsh.initialize()
