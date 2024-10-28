@@ -56,6 +56,5 @@ def convert_mesh(filename, volume_file="mesh/mesh.xdmf", boundary_file="mesh/mf.
     # Write the mesh files
     meshio.write(volume_file, tetra_mesh)
     meshio.write(boundary_file, triangle_mesh)
-    assert False
 
     return len(tetra_cells), len(triangle_cells)
