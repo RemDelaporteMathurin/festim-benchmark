@@ -26,6 +26,7 @@ jobs:
         run: python main.py
 
   festim-1:
+    needs: festim-dev
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
