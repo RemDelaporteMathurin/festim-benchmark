@@ -5,6 +5,7 @@ from convert_mesh import convert_mesh
 
 def three_cubes(filename, size=0.1):
     gmsh.initialize()
+    gmsh.option.setNumber("General.Terminal", 1)
 
     cube1 = gmsh.model.occ.addBox(x=0, y=0, z=0, dx=1, dy=1, dz=1)
     cube2 = gmsh.model.occ.addBox(x=1, y=0, z=0, dx=1, dy=1, dz=1)
@@ -92,7 +93,7 @@ def three_cubes(filename, size=0.1):
     gmsh.model.mesh.generate(3)
 
     # Save the mesh
-    # Path(filename).parent.mkdir(parents=True, exist_ok=True)
+    Path(filename).parent.mkdir(parents=True, exist_ok=True)
     gmsh.write(filename)
     print(f"Mesh saved to '{filename}'")
 
