@@ -92,8 +92,8 @@ def three_cubes(filename, size=0.1):
     gmsh.model.mesh.generate(3)
 
     # Save the mesh
-    Path(filename).parent.mkdir(parents=True, exist_ok=True)
-    gmsh.write(filename)
+    # Path(filename).parent.mkdir(parents=True, exist_ok=True)
+    # gmsh.write(filename)
     print(f"Mesh saved to '{filename}'")
 
     # try:
