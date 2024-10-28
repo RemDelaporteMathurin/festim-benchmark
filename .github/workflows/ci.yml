@@ -15,9 +15,14 @@ jobs:
           environment-file: environment.yml
           activate-environment: festim-benchmark-env
 
-      - name: Placeholder step for Job 1
+      - name: Convert notebook to script
+        working-directory: case_1_simple
         shell: bash -l {0}
-        run: echo "Running Job 1"
+        run: jupyter nbconvert --to script main.ipynb
+
+      - name: Run converted script
+        shell: bash -l {0}
+        run: python main.py
 
   festim-1:
     runs-on: ubuntu-latest
@@ -32,6 +37,11 @@ jobs:
           environment-file: environment_festim_1.yml
           activate-environment: festim-benchmark-env_festim_1
 
-      - name: Placeholder step for Job 2
+      - name: Convert notebook to script
+        working-directory: case_1_simple
         shell: bash -l {0}
-        run: echo "Running Job 2"
+        run: jupyter nbconvert --to script main_festim_1.ipynb
+
+      - name: Run converted script
+        shell: bash -l {0}
+        run: python main_festim_1.py
