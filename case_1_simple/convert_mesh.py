@@ -3,10 +3,10 @@ import numpy as np
 
 
 def convert_mesh(filename, volume_file="mesh/mesh.xdmf", boundary_file="mesh/mf.xdmf"):
-    assert False
 
     # Convert mesh to XDMF
     msh = meshio.read(filename)
+    assert False
 
     # Initialize lists to store cells and their corresponding data
     triangle_cells_list = []
