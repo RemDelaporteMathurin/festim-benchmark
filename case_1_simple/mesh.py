@@ -103,15 +103,3 @@ def three_cubes(filename, size=0.1):
     #     pass
 
     gmsh.finalize()
-
-
-if __name__ == "__main__":
-    for size in [0.1, 0.07, 0.05, 0.04]:
-        three_cubes(f"mesh/size_{size}/mesh.msh", size=size)
-        volume_file = f"mesh/size_{size}/mesh.xdmf"
-        facet_file = f"mesh/size_{size}/mf.xdmf"
-        convert_mesh(
-            f"mesh/size_{size}/mesh.msh",
-            volume_file=volume_file,
-            boundary_file=facet_file,
-        )
