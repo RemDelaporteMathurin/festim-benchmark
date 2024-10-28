@@ -93,7 +93,6 @@ def three_cubes(filename, size=0.1):
 
     # Save the mesh
     print(f"Saving mesh to '{filename}'...")
-    filename = os.path.join(os.getenv("GITHUB_WORKSPACE"), filename)
     Path(filename).parent.mkdir(parents=True, exist_ok=True)
     gmsh.write(filename)
     print(f"Mesh saved to '{filename}'")
