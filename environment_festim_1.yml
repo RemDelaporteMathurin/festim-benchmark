@@ -1,0 +1,15 @@
+name: festim-benchmark-env_festim_1
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - fenics
+  - matplotlib
+  - pandas
+  - python-gmsh
+  - meshio
+  - ipykernel
+  - ipyparallel
+  - pip
+  - pip:
+      - festim~=1.3
