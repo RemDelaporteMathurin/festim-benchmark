@@ -14,7 +14,6 @@ def run_festim_2(volume_file: str, facet_file: str):
         volume_file=volume_file,
         facet_file=facet_file,
     )
-    mt = my_model.mesh.define_surface_meshtags()
 
     tungsten = F.Material(D_0=1, E_D=0, K_S_0=1, E_K_S=0)
 
