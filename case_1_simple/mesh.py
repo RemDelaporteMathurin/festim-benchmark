@@ -16,6 +16,7 @@ def empty_mesh(filename):
     gmsh.model.geo.addPlaneSurface([1], 1)
     gmsh.model.geo.synchronize()
     gmsh.model.mesh.generate(2)
+    Path(filename).parent.mkdir(parents=True, exist_ok=True)
     gmsh.write(filename)
     gmsh.finalize()
 
