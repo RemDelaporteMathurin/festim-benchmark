@@ -10,6 +10,7 @@ dependencies:
   - meshio
   - ipykernel
   - ipyparallel
+  - nbconvert
   - pip
   - pip:
       - festim~=1.3

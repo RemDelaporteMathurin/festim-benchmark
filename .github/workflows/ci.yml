@@ -18,7 +18,7 @@ jobs:
       - name: Convert notebook to script
         working-directory: case_1_simple
         shell: bash -l {0}
-        run: jupyter nbconvert --to script main.ipynb
+        run: jupyter-nbconvert --to script main.ipynb
 
       - name: Run converted script
         shell: bash -l {0}
@@ -40,7 +40,7 @@ jobs:
       - name: Convert notebook to script
         working-directory: case_1_simple
         shell: bash -l {0}
-        run: jupyter nbconvert --to script main_festim_1.ipynb
+        run: jupyter-nbconvert --to script main_festim_1.ipynb
 
       - name: Run converted script
         shell: bash -l {0}
