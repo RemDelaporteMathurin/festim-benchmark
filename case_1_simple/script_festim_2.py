@@ -125,7 +125,7 @@ def run_festim_2(volume_file: str, facet_file: str):
 
 def run_festim_2_change_of_var(volume_file: str, facet_file: str):
     my_model = F.HydrogenTransportProblemDiscontinuousChangeVar(
-        petcs_options={
+        petsc_options={
             "ksp_type": "preonly",
             "pc_type": "lu",
             "pc_factor_mat_solver_type": "mumps",
