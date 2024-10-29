@@ -1,22 +1,23 @@
 import festim as F
-import numpy as np
-from mpi4py import MPI
-import time
 
-assert hasattr(
-    F, "HydrogenTransportProblem"
-), "you should use FESTIM on the fenicsx branch"
-
-
-import dolfinx
 
 # dolfinx.log.set_log_level(dolfinx.log.LogLevel.INFO)
 
 
-def run_festim_2(volume_file, facet_file):
+def run_festim_2(volume_file: str, facet_file: str):
+    assert hasattr(
+        F, "HydrogenTransportProblem"
+    ), "you should use FESTIM on the fenicsx branch"
 
-    my_model = F.HTransportProblemDiscontinuous()
-    my_model.show_progress_bar = False
+    my_model = F.HTransportProblemDiscontinuous(
+        petsc_options={
+            "ksp_type": "preonly",
+            "pc_type": "lu",
+            "pc_factor_mat_solver_type": "mumps",
+            "ksp_monitor": None,
+            "ksp_error_if_not_converged": True,
+        }
+    )
     my_model.mesh = F.MeshFromXDMF(
         volume_file=volume_file,
         facet_file=facet_file,
@@ -28,13 +29,15 @@ def run_festim_2(volume_file, facet_file):
 
     vol1 = F.VolumeSubdomain(id=1, material=tungsten)
     vol2 = F.VolumeSubdomain(id=2, material=copper)
-    surface1 = F.SurfaceSubdomain(id=3)
+    vol3 = F.VolumeSubdomain(id=3, material=copper)
+    surface1 = F.SurfaceSubdomain(id=4)
 
-    interface1 = F.Interface(id=4, subdomains=[vol1, vol2], penalty_term=10.0)
+    interface1 = F.Interface(id=6, subdomains=[vol1, vol2])
+    interface1 = F.Interface(id=7, subdomains=[vol2, vol3])
 
     surface2 = F.SurfaceSubdomain(id=5)
 
-    my_model.subdomains = [vol1, vol2, surface1, surface2]
+    my_model.subdomains = [vol1, vol2, vol3, surface1, surface2]
 
     mobile = F.Species(name="H", subdomains=my_model.volume_subdomains, mobile=True)
     trapped_1a = F.Species(name="H_trapped_W1", subdomains=[vol1], mobile=False)
@@ -91,90 +94,29 @@ def run_festim_2(volume_file, facet_file):
     my_model.settings = F.Settings(atol=1e-6, rtol=1e-6, final_time=10)
     my_model.settings.stepsize = F.Stepsize(1)
 
-    # mobile_exports = [
-    #     F.VTXExport(
-    #         f"results_festim_2/mobile_{subdomain.id}.bp",
-    #         field=mobile,
-    #         subdomain=subdomain,
+    # my_model.exports = [
+    #     F.VTXSpeciesExport(
+    #         f"results_festim_2/mobile_{subdomain.id}.bp", field=mobile, subdomain=subdomain
     #     )
     #     for subdomain in my_model.volume_subdomains
     # ]
-    # trapped_exports = [
-    #     F.VTXExport(
+    # [
+    #     F.VTXSpeciesExport(
     #         f"results_festim_2/trapped_{vol1.id}a.bp",
     #         field=trapped_1a,
     #         subdomain=vol1,
     #     ),
-    #     F.VTXExport(
+    #     F.VTXSpeciesExport(
     #         f"results_festim_2/trapped_{vol1.id}b.bp",
     #         field=trapped_1b,
     #         subdomain=vol1,
     #     ),
-    #     F.VTXExport(
+    #     F.VTXSpeciesExport(
     #         f"results_festim_2/trapped_{vol2.id}.bp",
     #         field=trapped_2,
     #         subdomain=vol2,
     #     ),
     # ]
 
-    # my_model.exports = mobile_exports + trapped_exports
     my_model.initialise()
     my_model.run()
-
-    nb_cells = len(my_model.volume_meshtags.indices)
-    return nb_cells
-
-
-if __name__ == "__main__":
-    import pandas as pd
-
-    # Get the number of processes
-    comm = MPI.COMM_WORLD
-    num_procs = comm.Get_size()
-    rank = comm.Get_rank()
-    if rank == 0:
-        print(f"Number of processes: {num_procs}")
-    times = []
-    sizes = [0.1, 0.07, 0.05, 0.04]
-    nb_cells = []
-    ranks = []
-    for size in sizes:
-        if rank == 0:
-            print(f"Running for size {size}")
-        volume_file = f"mesh/size_{size}/mesh.xdmf"
-        facet_file = f"mesh/size_{size}/mf.xdmf"
-        start_time = time.time()
-        N = run_festim_2(volume_file=volume_file, facet_file=facet_file)
-        nb_cells.append(N)
-        end_time = time.time()
-        ellapsed_time = end_time - start_time
-        times.append(ellapsed_time)
-        ranks.append(rank)
-    print(sizes)
-    print(times)
-    print(nb_cells)
-
-    # Gather data from all processes
-    all_sizes = comm.gather(sizes, root=0)
-    all_nb_cells = comm.gather(nb_cells, root=0)
-    all_times = comm.gather(times, root=0)
-    all_ranks = comm.gather(ranks, root=0)
-
-    if rank == 0:
-        # Flatten the lists
-        all_ranks = [item for sublist in all_ranks for item in sublist]
-        all_sizes = [item for sublist in all_sizes for item in sublist]
-        all_nb_cells = [item for sublist in all_nb_cells for item in sublist]
-        all_times = [item for sublist in all_times for item in sublist]
-
-        # Create a DataFrame and save to CSV
-        df = pd.DataFrame(
-            {
-                "rank": all_ranks,
-                "size": all_sizes,
-                "nb_cells": all_nb_cells,
-                "time": all_times,
-            }
-        )
-        df.to_csv(f"festim_2_results_nprocs_{num_procs}.csv", index=False)
-        print(df)

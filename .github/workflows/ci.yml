@@ -1,0 +1,50 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  festim-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          environment-file: environment.yml
+          activate-environment: festim-benchmark-env
+
+      - name: Convert notebook to script
+        working-directory: case_1_simple
+        shell: bash -l {0}
+        run: jupyter-nbconvert --to script main.ipynb
+
+      - name: Run converted script
+        working-directory: case_1_simple
+        shell: bash -l {0}
+        run: python main.py
+
+  festim-1:
+    needs: festim-dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          environment-file: environment_festim_1.yml
+          activate-environment: festim-benchmark-env_festim_1
+
+      - name: Convert notebook to script
+        working-directory: case_1_simple
+        shell: bash -l {0}
+        run: jupyter-nbconvert --to script main_festim_1.ipynb
+
+      - name: Run converted script
+        working-directory: case_1_simple
+        shell: bash -l {0}
+        run: python main_festim_1.py

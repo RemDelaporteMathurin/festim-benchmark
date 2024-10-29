@@ -1,17 +1,16 @@
-name: festim-benchmark-env
+name: festim-benchmark-env_festim_1
 channels:
   - conda-forge
 dependencies:
   - python=3.10
-  - fenics-dolfinx=0.9.0
+  - fenics
   - matplotlib
   - pandas
   - python-gmsh
   - meshio
-  - scifem=0.2.8
   - ipykernel
   - ipyparallel
   - nbconvert
   - pip
   - pip:
-      - git+https://github.com/remdelaportemathurin/festim@discontinuity-generic
+      - festim~=1.3
