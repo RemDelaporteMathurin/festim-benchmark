@@ -14,4 +14,4 @@ dependencies:
   - nbconvert
   - pip
   - pip:
-      - git+https://github.com/remdelaportemathurin/festim@25a97903fcdf7d45f4fac384ca86002653e37cac
+      - git+https://github.com/remdelaportemathurin/festim@discontinuity-generic
