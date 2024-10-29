@@ -14,4 +14,4 @@ dependencies:
   - nbconvert
   - pip
   - pip:
-      - git+https://github.com/remdelaportemathurin/festim@discontinuity-generic
+      - git+https://github.com/remdelaportemathurin/festim@change-of-var-method
