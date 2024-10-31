@@ -8,7 +8,7 @@ def run_festim_1(volume_file: str, facet_file: str):
         boundary_file=facet_file,
     )
 
-    surface_1_id = 3
+    surface_1_id = 4
     surface_2_id = 5
 
     tungsten = F.Material(id=1, D_0=1, E_D=0, S_0=1, E_S=0)
