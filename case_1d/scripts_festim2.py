@@ -2,8 +2,9 @@ import numpy as np
 import festim as F
 
 
-def run_change_of_variable(nb_cells_per_segment: int = 100):
+def run_change_of_variable(nb_cells_per_segment: int = 10000):
     my_model = F.HydrogenTransportProblemDiscontinuousChangeVar()
+    my_model.show_progress_bar = False
 
     interface_1 = 0.2
     interface_2 = 0.8
@@ -93,8 +94,9 @@ def run_change_of_variable(nb_cells_per_segment: int = 100):
     my_model.run()
 
 
-def run_mixed_formulation(nb_cells_per_segment: int = 100):
+def run_mixed_formulation(nb_cells_per_segment: int = 10000):
     my_model = F.HTransportProblemDiscontinuous()
+    my_model.show_progress_bar = False
 
     interface_1 = 0.2
     interface_2 = 0.8
