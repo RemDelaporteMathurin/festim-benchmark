@@ -92,7 +92,12 @@ def run_festim_2(volume_file: str, facet_file: str):
         surface2: vol2,
     }
 
-    my_model.settings = F.Settings(atol=1e-6, rtol=1e-6, final_time=10)
+    my_model.settings = F.Settings(
+        atol=1e-6,
+        rtol=1e-6,
+        final_time=10,
+        # transient=False,
+    )
     my_model.settings.stepsize = F.Stepsize(1)
 
     # my_model.exports = [
@@ -196,19 +201,17 @@ def run_festim_2_change_of_var(volume_file: str, facet_file: str):
 
     my_model.temperature = 600
 
-    for vol in my_model.volume_subdomains:
-        assert vol.material.E_K_S == 0, "E_K_S should be 0"
-
     my_model.boundary_conditions = [
-        F.FixedConcentrationBC(
-            subdomain=surface1, species=mobile, value=2 / vol1.material.K_S_0
-        ),
-        F.FixedConcentrationBC(
-            subdomain=surface2, species=mobile, value=0 / vol3.material.K_S_0
-        ),
+        F.FixedConcentrationBC(subdomain=surface1, species=mobile, value=2),
+        F.FixedConcentrationBC(subdomain=surface2, species=mobile, value=0),
     ]
 
-    my_model.settings = F.Settings(atol=1e-6, rtol=1e-6, final_time=10)
+    my_model.settings = F.Settings(
+        atol=1e-6,
+        rtol=1e-6,
+        final_time=10,
+        # transient=False,
+    )
     my_model.settings.stepsize = F.Stepsize(1)
 
     # my_model.exports = [
