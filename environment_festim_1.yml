@@ -11,6 +11,7 @@ dependencies:
   - ipykernel
   - ipyparallel
   - nbconvert
+  - numpy=1.24
   - pip
   - pip:
       - festim~=1.3
