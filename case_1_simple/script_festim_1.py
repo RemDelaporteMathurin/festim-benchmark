@@ -8,7 +8,7 @@ def run_festim_1(volume_file: str, facet_file: str):
         boundary_file=facet_file,
     )
 
-    surface_1_id = 3
+    surface_1_id = 4
     surface_2_id = 5
 
     tungsten = F.Material(id=1, D_0=1, E_D=0, S_0=1, E_S=0)
@@ -52,6 +52,7 @@ def run_festim_1(volume_file: str, facet_file: str):
         chemical_pot=True,
         transient=True,
         final_time=10,
+        # transient=False,
         linear_solver="mumps",
     )
 
@@ -64,5 +65,10 @@ def run_festim_1(volume_file: str, facet_file: str):
     #         F.XDMFExport("2", folder="results_festim_1", checkpoint=True),
     #     ]
     # )
+    # my_model.log_level = 20
     my_model.initialise()
     my_model.run()
+
+
+if __name__ == "__main__":
+    run_festim_1("meshes/mesh_0.05.xdmf", "meshes/mesh_0.05_facet.xdmf")
