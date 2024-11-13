@@ -13,9 +13,9 @@ def run_festim_1(volume_file: str, facet_file: str):
 
     tungsten = F.Material(id=1, D_0=1, E_D=0, S_0=1, E_S=0)
     copper = F.Material(id=2, D_0=1, E_D=0, S_0=2, E_S=0)
-    tungsten_bis = F.Material(id=3, D_0=1, E_D=0, S_0=1, E_S=0)
+    copper_bis = F.Material(id=3, D_0=1, E_D=0, S_0=2, E_S=0)
 
-    my_model.materials = [tungsten, copper, tungsten_bis]
+    my_model.materials = [tungsten, copper, copper_bis]
 
     my_model.traps = F.Traps(
         [
