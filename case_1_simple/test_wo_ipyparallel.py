@@ -1,7 +1,7 @@
 from mesh import three_cubes
-from mpi4py import MPI
 import argparse
 import numpy as np
+from pathlib import Path
 
 def run_legacy(volume_file: str, facet_file: str) -> float:
     from script_festim_1 import run_festim_1
@@ -17,6 +17,7 @@ def run_legacy(volume_file: str, facet_file: str) -> float:
     return elapsed_time
 
 def run(volume_file: str, facet_file: str) -> float:
+    from mpi4py import MPI
     from script_festim_2 import run_festim_2
     import time
     MPI.COMM_WORLD.Barrier()
@@ -31,6 +32,8 @@ def run(volume_file: str, facet_file: str) -> float:
 
 # +
 def run_change_of_var(volume_file: str, facet_file: str) -> float:
+    from mpi4py import MPI
+
     from script_festim_2 import run_festim_2_change_of_var
     import time
     MPI.COMM_WORLD.Barrier()
@@ -44,10 +47,10 @@ def run_change_of_var(volume_file: str, facet_file: str) -> float:
     return elapsed_time
 
 def run_penalty(volume_file: str, facet_file: str) -> float:
+    from mpi4py import MPI
     from script_festim_2 import run_festim_2_penalty
     import time
     MPI.COMM_WORLD.Barrier()
-
     start = time.perf_counter()
     run_festim_2_penalty(volume_file, facet_file)
     end = time.perf_counter()
@@ -75,6 +78,7 @@ if __name__ == "__main__":
     volume_file = f"meshes/mesh_{size}.xdmf"
     facet_file = f"meshes/mesh_{size}_facet.xdmf"
     if args.generate_mesh:
+        from mpi4py import MPI
         from convert_mesh import convert_mesh
         if MPI.COMM_WORLD.rank == 0:
             three_cubes(filename, size=size)
@@ -86,6 +90,7 @@ if __name__ == "__main__":
 
 
     if args.run_dolfinx:
+        from mpi4py import MPI
         import dolfinx
 
         elapsed_times =  MPI.COMM_WORLD.gather(run(volume_file, facet_file), root=0)
@@ -111,18 +116,19 @@ if __name__ == "__main__":
                     file.write("MeshSize,NumProcs,Mixed,ChangeVar,Penalty\n")
                     file.write(f"{size:.5e},{MPI.COMM_WORLD.size},{np.max(elapsed_times):.5e},{np.max(runtime_changes):.5e},{np.max(runtimes_penalty):.5e}\n")
     if args.run_legacy:
-        import dolfin
-        legacy_times = MPI.COMM_WORLD.gather(run_legacy(volume_file, facet_file), root=0)
 
-        if MPI.COMM_WORLD.rank == 0:
+        import dolfin
+        comm_size = dolfin.MPI.comm_world.size
+        rank = dolfin.MPI.comm_world.rank
+        legacy_times = dolfin.MPI.comm_world.gather(run_legacy(volume_file, facet_file), root=0)
+        if rank == 0:
             print(f"Legacy: {legacy_times} seconds")
-        if MPI.COMM_WORLD.rank == 0:
-            from pathlib import Path
             output_file = Path("results_legacy.csv")
             if output_file.exists():
                 with open(output_file, "a") as file:
-                    file.write(f"{size:.5e},{MPI.COMM_WORLD.size},{np.max(elapsed_times):.5e},{np.max(runtime_changes):.5e},{np.max(runtimes_penalty):.5e}\n")
+                    file.write(f"{size:.5e},{comm_size},{np.max(legacy_times):.5e}\n")
             else:
                 with open(output_file, "w") as file:
                     file.write("MeshSize,NumProcs,ChangeVar\n")
-                    file.write(f"{size:.5e},{MPI.COMM_WORLD.size},{np.max(legacy_times)}\n")
+                    file.write(f"{size:.5e},{comm_size},{np.max(legacy_times)}\n")
+ 
