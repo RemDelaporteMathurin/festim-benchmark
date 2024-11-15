@@ -109,16 +109,17 @@ def plot_runtime(
     plt.gca().spines["right"].set_visible(False)
     plt.legend()
 
+mesh_size = 0.04
 tab = pandas.read_csv("results.csv", sep=",")
-filtered_tab = tab[tab["MeshSize"]==0.05]
-procs = filtered_tab["NumProcs"]
+filtered_tab = tab[tab["MeshSize"]==mesh_size]
+procs = filtered_tab["NumProcs"].array
 sort = np.argsort(procs)
 
-mixed = filtered_tab["Mixed"][sort].array
-change = filtered_tab["ChangeVar"][sort].array
-penalty = filtered_tab["Penalty"][sort].array
-num_procs = procs[sort].array
+mixed = filtered_tab["Mixed"].array[sort]
+change = filtered_tab["ChangeVar"].array[sort]
+penalty = filtered_tab["Penalty"].array[sort]
+num_procs = procs[sort]
 plot_runtime(num_procs,mixed, change, penalty, show_festim_1=False, show_ideal=True)
 # ylim = plt.gca().get_ylim()
 # xlim = plt.gca().get_xlim()
-plt.savefig("all.png")
+plt.savefig(f"all_{mesh_size:.5e}.png")
