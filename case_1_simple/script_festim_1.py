@@ -1,7 +1,7 @@
 import festim as F
 
 
-def run_festim_1(volume_file: str, facet_file: str):
+def run_festim_1(volume_file: str, facet_file: str, exports=False):
     my_model = F.Simulation()
     my_model.mesh = F.MeshFromXDMF(
         volume_file=volume_file,
@@ -13,9 +13,9 @@ def run_festim_1(volume_file: str, facet_file: str):
 
     tungsten = F.Material(id=1, D_0=1, E_D=0, S_0=1, E_S=0)
     copper = F.Material(id=2, D_0=1, E_D=0, S_0=2, E_S=0)
-    tungsten_bis = F.Material(id=3, D_0=1, E_D=0, S_0=1, E_S=0)
+    copper_bis = F.Material(id=3, D_0=1, E_D=0, S_0=2, E_S=0)
 
-    my_model.materials = [tungsten, copper, tungsten_bis]
+    my_model.materials = [tungsten, copper, copper_bis]
 
     my_model.traps = F.Traps(
         [
@@ -28,12 +28,12 @@ def run_festim_1(volume_file: str, facet_file: str):
                 materials=tungsten,
             ),
             F.Trap(
-                k_0=[1, 1],
-                E_k=[tungsten.E_D, copper.E_D],
-                p_0=[0.1, 0.1],
-                E_p=[1.0, 0.5],
-                density=[0.5, 0.5],
-                materials=[tungsten, copper],
+                k_0=1,
+                E_k=copper.E_D,
+                p_0=0.1,
+                E_p=1.0,
+                density=0.5,
+                materials=copper,
             ),
         ]
     )
@@ -58,17 +58,32 @@ def run_festim_1(volume_file: str, facet_file: str):
 
     my_model.dt = F.Stepsize(1)
 
-    # my_model.exports = F.Exports(
-    #     [
-    #         F.XDMFExport("solute", folder="results_festim_1", checkpoint=True),
-    #         F.XDMFExport("1", folder="results_festim_1", checkpoint=True),
-    #         F.XDMFExport("2", folder="results_festim_1", checkpoint=True),
-    #     ]
-    # )
+    if exports:
+        my_model.exports = F.Exports(
+            [
+                F.XDMFExport("solute", folder="results_festim_1", checkpoint=True),
+                F.XDMFExport("1", folder="results_festim_1", checkpoint=True),
+                F.XDMFExport("2", folder="results_festim_1", checkpoint=True),
+            ]
+        )
     # my_model.log_level = 20
     my_model.initialise()
     my_model.run()
 
 
 if __name__ == "__main__":
-    run_festim_1("meshes/mesh_0.05.xdmf", "meshes/mesh_0.05_facet.xdmf")
+    from mesh import three_cubes
+
+    size = 0.05
+    filename = f"meshes/mesh_{size}.msh"
+
+    three_cubes(filename, size=size)
+
+    from convert_mesh import convert_mesh
+
+    volume_file = f"meshes/mesh_{size}.xdmf"
+    facet_file = f"meshes/mesh_{size}_facet.xdmf"
+    print(filename, volume_file, facet_file)
+    nb_cells, nb_facets = convert_mesh(filename, volume_file, facet_file)
+
+    run_festim_1(volume_file, facet_file, exports=True)
