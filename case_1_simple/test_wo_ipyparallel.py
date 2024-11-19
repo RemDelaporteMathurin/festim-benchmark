@@ -130,5 +130,5 @@ if __name__ == "__main__":
             else:
                 with open(output_file, "w") as file:
                     file.write("MeshSize,NumProcs,ChangeVar\n")
-                    file.write(f"{size:.5e},{comm_size},{np.max(legacy_times)}\n")
+                    file.write(f"{size:.5e},{comm_size},{np.max(legacy_times):.5e}\n")
  
